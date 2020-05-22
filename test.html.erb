@@ -12,16 +12,28 @@
       <input type="text"  name="input" ><br>
       <input type="submit" name="送信" >
     </form>
-    <% result = connection.exec("select weight, give_for from crops;") %>
+    <% result = connection.exec("select * from crops where not (give_for = '自家消費');") %>
     <% data = [] %>
     <% result.each do |record| %>
       <%  data << "ゴーヤの大きさ：#{record["weight"]}　売った相手：#{record["give_for"]}" %>
     <% end %>
     <form action="goya.cgi" method="POST">
-       下記のボタンを押すと、ゴーヤの大きさと売った相手の情報ページに飛びます<br><br>
+       下記のボタンを押すと、自家消費以外のゴーヤの情報ページに飛びます<br><br>
        <!-- valueには、送りたいデータを代入する -->
        <!-- name="goya"を、情報の目印とする -->
       <input type="text" name="goya" value="<%= data.join(' ') %>">
+      <input type="submit" name="送信" >
+    </form>
+    <% result = connection.exec("select * from crops where quality = false;") %>
+    <% data_2 = [] %>
+    <% result.each do |record| %>
+      <%  data_2 << "ゴーヤの大きさ：#{record["weight"]}　売った相手：#{record["give_for"]}" %>
+    <% end %>
+    <form action="quality.cgi" method="POST">
+       下記のボタンを押すと、品質の悪いゴーヤの情報ページに飛びます<br><br>
+       <!-- valueには、送りたいデータを代入する -->
+       <!-- name="quality"を、情報の目印とする -->
+      <input type="text" name="quality" value="<%= data_2.join(' ') %>">
       <input type="submit" name="送信" >
     </form>
   </body>
